@@ -6,11 +6,8 @@ import datetime
 import os
 
 # 🔑 Replace with your Telegram bot token and chat ID
-BOT_TOKEN = "8463684078:AAG2Z5zXVQodpzLrtepZJtDNgxDNWvx8B54"
-CHAT_IDS = [
-    "834517868",
-    "640492153",
-]
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_IDS = os.getenv("CHAT_IDS", "").split(",")
 
 WATCHDATA_FILE = 'seen_watches.json'
 URL = "https://hmtwatches.in/"
