@@ -4,6 +4,8 @@ import json
 import time
 import datetime
 import os
+import threading
+from flask import Flask
 
 # ✅ Load secrets from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -61,7 +63,7 @@ def save_seen(data):
         json.dump(data, f)
 
 
-def main_loop():
+def bot_loop():
     seen = load_seen()
     while True:
         current = fetch_newly_listed()
@@ -77,8 +79,17 @@ def main_loop():
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{now}] Checked. Found {len(new)} new listings.")
 
-        time.sleep(3600)  # check every 3 minutes
+        time.sleep(3600)  # check every 1 hour
+
+# Run bot in background thread
+threading.Thread(target=bot_loop, daemon=True).start()
+
+# Minimal Flask app to satisfy Render
+@app.route("/")
+def home():
+    return "HMT Bot running 🚀"
 
 
 if __name__ == "__main__":
-    main_loop()
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
