@@ -7,6 +7,8 @@ import os
 import threading
 from flask import Flask
 
+app = Flask(__name__)
+
 # ✅ Load secrets from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_IDS = os.getenv("CHAT_IDS", "").split(",")
