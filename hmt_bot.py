@@ -12,6 +12,7 @@ CHAT_IDS = os.getenv("CHAT_IDS", "").split(",")
 WATCHDATA_FILE = 'seen_watches.json'
 URL = "https://hmtwatches.in/"
 
+
 def send_telegram_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     for chat_id in CHAT_IDS:
@@ -24,6 +25,7 @@ def send_telegram_message(text):
             print(f"Sent to {chat_id}: {r.status_code}")
         except Exception as e:
             print(f"Failed to send to {chat_id}: {e}")
+
 
 def fetch_newly_listed():
     resp = requests.get(URL)
@@ -46,19 +48,23 @@ def fetch_newly_listed():
             items.append({'title': title, 'link': link})
     return items
 
+
 def load_seen():
     try:
         return json.load(open(WATCHDATA_FILE))
     except:
         return []
 
+
 def save_seen(data):
-    with open(WATCHDATA_FILE, 'w') as f: 
+    with open(WATCHDATA_FILE, 'w') as f:
         json.dump(data, f)
+
 
 def main_loop():
     seen = load_seen()
-    send_telegram_message("✅ Bot started successfully and is watching HMT Newly Listed...")
+    send_telegram_message(
+        "✅ Bot started successfully and is watching HMT Newly Listed...")
     while True:
         current = fetch_newly_listed()
         new = [w for w in current if w not in seen]
@@ -74,6 +80,7 @@ def main_loop():
         print(f"[{now}] Checked. Found {len(new)} new listings.")
 
         time.sleep(10800)  # check every 3 minutes
+
 
 if __name__ == "__main__":
     main_loop()
