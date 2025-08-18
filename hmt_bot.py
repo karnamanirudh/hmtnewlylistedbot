@@ -5,7 +5,7 @@ import time
 import datetime
 import os
 
-# 🔑 Replace with your Telegram bot token and chat ID
+# ✅ Load secrets from environment variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_IDS = os.getenv("CHAT_IDS", "").split(",")
 
@@ -13,8 +13,8 @@ WATCHDATA_FILE = 'seen_watches.json'
 URL = "https://hmtwatches.in/"
 
 def send_telegram_message(text):
-     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-     for chat_id in CHAT_IDS:
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    for chat_id in CHAT_IDS:
         chat_id = chat_id.strip()
         if not chat_id:
             continue
@@ -29,8 +29,10 @@ def fetch_newly_listed():
     resp = requests.get(URL)
     soup = BeautifulSoup(resp.text, 'html.parser')
 
-    new_section = soup.find("a", string="Newly Listed")
+    # ✅ "Newly Listed" is an <a> tag with class 'title'
+    new_section = soup.find("a", class_="title", string="Newly Listed")
     if not new_section:
+        print("⚠️ Could not find 'Newly Listed' section")
         return []
 
     product_grid = new_section.find_next("div")
@@ -56,6 +58,7 @@ def save_seen(data):
 
 def main_loop():
     seen = load_seen()
+    send_telegram_message("✅ Bot started successfully and is watching HMT Newly Listed...")
     while True:
         current = fetch_newly_listed()
         new = [w for w in current if w not in seen]
@@ -66,11 +69,11 @@ def main_loop():
         seen.extend(new)
         save_seen(seen)
 
-        # ✅ Print timestamp for confirmation
+        # ✅ Print timestamp
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"[{now}] Checked for new watches. Found {len(new)} new listings.")
+        print(f"[{now}] Checked. Found {len(new)} new listings.")
 
-        time.sleep(300)  # check every 5 minutes
+        time.sleep(10800)  # check every 3 minutes
 
 if __name__ == "__main__":
     main_loop()
