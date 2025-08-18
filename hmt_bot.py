@@ -14,7 +14,7 @@ URL = "https://hmtwatches.in/"
 
 def send_telegram_message(text):
      url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    for chat_id in CHAT_IDS:
+     for chat_id in CHAT_IDS:
         chat_id = chat_id.strip()
         if not chat_id:
             continue
