@@ -3,18 +3,27 @@ from bs4 import BeautifulSoup
 import json
 import time
 import datetime
+import os
 
 # 🔑 Replace with your Telegram bot token and chat ID
 BOT_TOKEN = "8463684078:AAG2Z5zXVQodpzLrtepZJtDNgxDNWvx8B54"
-CHAT_ID = "834517868"
+CHAT_IDS = [
+    "834517868",
+    "640492153",
+]
 
 WATCHDATA_FILE = 'seen_watches.json'
 URL = "https://hmtwatches.in/"
 
 def send_telegram_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": text}
-    requests.post(url, data=payload)
+    for chat_id in CHAT_IDS:
+        payload = {"chat_id": CHAT_ID, "text": text}
+        try:
+             r = requests.post(url, data=payload)
+             print(f"Sent to {chat_id}: {r.status_code}")
+        except Exception as e:
+            print(f"Failed to send to {chat_id}: {e}")
 
 def fetch_newly_listed():
     resp = requests.get(URL)
