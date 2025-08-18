@@ -79,7 +79,7 @@ def main_loop():
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{now}] Checked. Found {len(new)} new listings.")
 
-        time.sleep(10800)  # check every 3 minutes
+        time.sleep(3600)  # check every 3 minutes
 
 
 if __name__ == "__main__":
