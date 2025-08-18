@@ -63,8 +63,6 @@ def save_seen(data):
 
 def main_loop():
     seen = load_seen()
-    send_telegram_message(
-        "✅ Bot started successfully and is watching HMT Newly Listed...")
     while True:
         current = fetch_newly_listed()
         new = [w for w in current if w not in seen]
