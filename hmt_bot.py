@@ -13,12 +13,15 @@ WATCHDATA_FILE = 'seen_watches.json'
 URL = "https://hmtwatches.in/"
 
 def send_telegram_message(text):
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     for chat_id in CHAT_IDS:
-        payload = {"chat_id": CHAT_ID, "text": text}
+        chat_id = chat_id.strip()
+        if not chat_id:
+            continue
         try:
-             r = requests.post(url, data=payload)
-             print(f"Sent to {chat_id}: {r.status_code}")
+            payload = {"chat_id": chat_id, "text": text}
+            r = requests.post(url, data=payload)
+            print(f"Sent to {chat_id}: {r.status_code}")
         except Exception as e:
             print(f"Failed to send to {chat_id}: {e}")
 
