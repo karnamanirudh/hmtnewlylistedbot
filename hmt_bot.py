@@ -74,10 +74,12 @@ def bot_loop():
             for w in new:
                 msg = f"🔥 New Watch:\n{w['title']}\n{w['link']}"
                 send_telegram_message(msg)
-        seen.extend(new)
-        save_seen(seen)
+            seen.extend(new)
+            save_seen(seen)
+        else:
+            # Debug message so you know the bot is alive
+            send_telegram_message("⏰ Checked — no new watches this hour.")
 
-        # ✅ Print timestamp
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{now}] Checked. Found {len(new)} new listings.")
 
@@ -93,5 +95,6 @@ def home():
 
 
 if __name__ == "__main__":
+    send_telegram_message("🚀 HMT Watch Bot started on Render!")
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
